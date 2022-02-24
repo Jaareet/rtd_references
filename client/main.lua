@@ -1,4 +1,4 @@
----Copyright 2021 |-| RTDTonino#2060 ----
+---Copyright 2021 |-| ZeonFlux#4424 ----
 local ESX = nil
 
 Citizen.CreateThread(function()
@@ -64,11 +64,11 @@ function ReferenceMenu()
         local v = data.current.value
         
         if v == 1 then
-			TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
+			TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
 			ESX.UI.Menu.CloseAll()
 		else
             if CurrentAsignation ~= "nasignacion" then
-                TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
+                TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
                 ESX.UI.Menu.CloseAll()
             else
                 ESX.ShowNotification('Tienes que asignarte antes de pedir refuerzos')
@@ -82,8 +82,8 @@ end
 
 local blips = {}
 
-RegisterNetEvent('rtd_refuerzos:deleteRef')
-AddEventHandler('rtd_refuerzos:deleteRef', function(source, asign, name)
+RegisterNetEvent('zeon_refuerzos:deleteRef')
+AddEventHandler('zeon_refuerzos:deleteRef', function(source, asign, name)
     if(blips[source] and DoesBlipExist(blips[source])) then
         RemoveBlip(blips[source])
         blips[source] = nil
@@ -91,8 +91,8 @@ AddEventHandler('rtd_refuerzos:deleteRef', function(source, asign, name)
     end
 end)
 
-RegisterNetEvent('rtd_refuerzos:setRef')
-AddEventHandler('rtd_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
+RegisterNetEvent('zeon_refuerzos:setRef')
+AddEventHandler('zeon_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
 	local xPlayer = ESX.GetPlayerData()
 	if xPlayer.job.name == 'police' then
 		if blips[source] then --actualiza blip
@@ -179,7 +179,7 @@ local elementos = {}
     
                 local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                 local fplate = GetVehicleNumberPlateText(e)
-                TriggerServerEvent('rtd_refuerzos:setRef', 52, CurrentAsignation)
+                TriggerServerEvent('zeon_refuerzos:setRef', 52, CurrentAsignation)
 
                 ExecuteCommand('rpol [LSPD] - [' ..CurrentAsignation.. "] | 10.6 | " ..fmodel.. " con matrícula "..fplate.." en "..plyl)
             elseif v == '254v' then
@@ -194,7 +194,7 @@ local elementos = {}
     
                     local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                     local fplate = GetVehicleNumberPlateText(e)
-                    TriggerServerEvent('rtd_refuerzos:setRef', 11, CurrentAsignation)
+                    TriggerServerEvent('zeon_refuerzos:setRef', 11, CurrentAsignation)
 
                     ExecuteCommand('rpol [LSPD] - ['..CurrentAsignation.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
             else
@@ -207,4 +207,4 @@ end
 
 RegisterKeyMapping('cmenu', 'Abrir menú central de radio', 'keyboard', 'F6')
 
----Copyright 2022 |-| RTDTonino#2060 ----
+---Copyright 2022 |-| ZeonFlux#4424 ----

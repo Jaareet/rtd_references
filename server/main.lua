@@ -1,4 +1,4 @@
----Copyright 2021 |-| RTDTonino#2060 ----
+---Copyright 2021 |-| ZeonFlux#4424 ----
 ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -11,7 +11,7 @@ function DeleteBlip(source, CurrentAsign)
     local name = Player.getName()
     print("borrado blip")
     for k,v in pairs(polices) do
-        TriggerClientEvent('rtd_refuerzos:deleteRef', k, source, CurrentAsign, name)
+        TriggerClientEvent('zeon_refuerzos:deleteRef', k, source, CurrentAsign, name)
     end
     referencias[source] = nil
 end
@@ -24,13 +24,13 @@ function CreateBlip(source, color, CurrentAsign)
     local heading = GetEntityHeading(playerPed)
     print("creado blip")
     for k,v in pairs(polices) do
-        TriggerClientEvent('rtd_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
+        TriggerClientEvent('zeon_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
     end
     referencias[source] = true
 end
 
-RegisterServerEvent('rtd_refuerzos:setRef')
-AddEventHandler('rtd_refuerzos:setRef', function(type, CurrentAsign)
+RegisterServerEvent('zeon_refuerzos:setRef')
+AddEventHandler('zeon_refuerzos:setRef', function(type, CurrentAsign)
     local source = source
 
     if(not polices[source]) then return end --no es policia. Quizás inyectó código
@@ -53,7 +53,7 @@ Citizen.CreateThread(function()
             local policeCoords = GetEntityCoords(policePed)
             local policeHeading = GetEntityHeading(policePed)        
             for _,val in pairs(polices) do
-                TriggerClientEvent('rtd_refuerzos:setRef', _, k, policeCoords, 3, policeHeading, "", "")
+                TriggerClientEvent('zeon_refuerzos:setRef', _, k, policeCoords, 3, policeHeading, "", "")
             end
         end
         Citizen.Wait(0)
@@ -95,3 +95,5 @@ AddEventHandler('onServerResourceStart', function(name)
         end
     end
 end)
+
+---Copyright 2021 |-| ZeonFlux#4424 ----

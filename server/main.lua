@@ -9,7 +9,6 @@ local referencias = {}
 function DeleteBlip(source, CurrentAsign)
     local Player = ESX.GetPlayerFromId(source)
     local name = Player.getName()
-    print("borrado blip")
     for k,v in pairs(polices) do
         TriggerClientEvent('zeon_refuerzos:deleteRef', k, source, CurrentAsign, name)
     end
@@ -22,7 +21,6 @@ function CreateBlip(source, color, CurrentAsign)
     local playerPed = GetPlayerPed(source)
     local pos = GetEntityCoords(playerPed)
     local heading = GetEntityHeading(playerPed)
-    print("creado blip")
     for k,v in pairs(polices) do
         TriggerClientEvent('zeon_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
     end
@@ -36,7 +34,7 @@ AddEventHandler('zeon_refuerzos:setRef', function(type, CurrentAsign)
     if(not polices[source]) then return end --no es policia. Quizás inyectó código
     
     if referencias[source] then --antes de crear otro blip, borro el existente
-        TriggerClientEvent('esx:showNotification', source, "Has desactivado los ~o~ refuerzos")
+        TriggerEvent('zeon_notify:ShowNotification', "Has desactivado los ~o~ refuerzos", "Policia")
         DeleteBlip(source, CurrentAsign)
     end
 
@@ -95,5 +93,3 @@ AddEventHandler('onServerResourceStart', function(name)
         end
     end
 end)
-
----Copyright 2021 |-| ZeonFlux#4424 ----

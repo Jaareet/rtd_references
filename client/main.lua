@@ -10,30 +10,57 @@ end)
 
 local CurrentAsignation = "Sin Asignación" --key of below array. No tocar
 
-local Asignaciones = {
-    ["Sin Asignación"] = "Sin Asignación", --debe estar siempre
-    ["Mando LSPD"] = "Mando LSPD",
-    ["U-10"] = "U-10",
-    ["Adam-10"] = "Adam-10"
-}
 
 function OpenAsignMenu()
-    local elem = {}
-
-    for k,v in pairs(Asignaciones) do
-        table.insert(elem, {label = v, value = k})
-    end
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'asignacion', {
 		title    = "Asignaciones",
 		align    = 'bottom-right',
-		elements = elem
-	}, function(data, menu)
+		elements = {
+
+			{label = "Mando LSPD", value = 'mandolspd'},
+			{label = "Mando BCSD",   value = 'mandobcsd'},
+			{label = "U-10", value = 'u10'},
+			{label = "U-20",   value = 'u20'},
+			{label = "U-30",   value = 'u30'},
+			{label = "U-40",   value = 'u40'},
+			{label = "U-50",   value = 'u50'},
+			{label = "ADAM-10",   value = 'adam10'},
+			{label = "ADAM-20",   value = 'adam20'},
+			{label = "ADAM-30",   value = 'adam30'},
+			{label = "ADAM-40",   value = 'adam40'},
+			{label = "ADAM-50",   value = 'adam50'},
+			{label = "ADAM-60",   value = 'adam60'},
+			{label = "ADAM-70",   value = 'adam70'},
+			{label = "ADAM-80",   value = 'adam80'},
+			{label = "ADAM-90",   value = 'adam90'},
+			{label = "MARY-1",   value = 'mary1'},
+			{label = "MARY-2",   value = 'mary2'},
+			{label = "MARY-3",   value = 'mary3'},
+			{label = "MARY-4",   value = 'mary4'},
+			{label = "ALPHA-10",   value = 'alpha10'},
+			{label = "ALPHA-20",   value = 'alpha20'},
+			{label = "ALPHA-30",   value = 'alpha30'},
+			{label = "ALPHA-40",   value = 'alpha40'},
+			{label = "BRAVO-10",   value = 'bravo10'},
+			{label = "BRAVO-20",   value = 'bravo20'},
+			{label = "BRAVO-30",   value = 'bravo30'},
+			{label = "BRAVO-40",   value = 'bravo40'},
+			{label = "MIKE-1",   value = 'mike1'},
+			{label = "MIKE-2",   value = 'mike2'},
+			{label = "CHARLIE-10",   value = 'charlie10'},
+			{label = "CHARLIE-20",   value = 'charlie20'},
+			{label = "TAC-1",   value = 'tac1'},
+			{label = "TAC-2",   value = 'tac2'},
+			{label = "TAC-3",   value = 'tac3'},
+			{label = "TAC-4",   value = 'tac4'},
+
+    }}, function(data, menu)
 		local v = data.current.value
 		if v then
-			CurrentAsignation = v
+			CurrentAsignation = data.current.label
 			Citizen.Wait(100)
-			ESX.ShowNotification('Te has asignado en '..Asignaciones[v])
+            TriggerEvent('zeon_notify:ShowNotification', 'Te has asignado en '..data.current.label, "Policia")
 			ESX.UI.Menu.CloseAll()
 		end
 	end, function(data, menu)
@@ -67,11 +94,11 @@ function ReferenceMenu()
 			TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
 			ESX.UI.Menu.CloseAll()
 		else
-            if CurrentAsignation ~= "nasignacion" then
+            if CurrentAsignation ~= "Sin Asignación" then
                 TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
                 ESX.UI.Menu.CloseAll()
             else
-                ESX.ShowNotification('Tienes que asignarte antes de pedir refuerzos')
+                TriggerEvent('zeon_notify:ShowNotification', 'Tienes que asignarte antes de pedir refuerzos', "Policia")
             end
         end
 
@@ -87,7 +114,7 @@ AddEventHandler('zeon_refuerzos:deleteRef', function(source, asign, name)
     if(blips[source] and DoesBlipExist(blips[source])) then
         RemoveBlip(blips[source])
         blips[source] = nil
-        ESX.ShowNotification(Asignaciones[asign].. ' | '..name.." ha desactivado su localizador")
+        TriggerEvent('zeon_notify:ShowNotification', asign.. ' | '..name.." ha desactivado su localizador", "Policia")
     end
 end)
 
@@ -101,9 +128,9 @@ AddEventHandler('zeon_refuerzos:setRef', function(source, pos, color, heading, a
 			SetBlipRotation(blips[source], math.floor(heading))
 		else --crea blip, es nuevo
 			blips[source] = AddBlipForCoord(pos.x, pos.y, pos.z)
-			ESX.ShowNotification(Asignaciones[asign].. ' | '..name.." ha activado su localizador")
+            TriggerEvent('zeon_notify:ShowNotification', asign.. ' | '..name.." ha activado su localizador", "Policia")
 			BeginTextCommandSetBlipName('STRING')
-			AddTextComponentSubstringPlayerName(Asignaciones[asign]..' | '..name)
+			AddTextComponentSubstringPlayerName(asign..' | '..name)
 			EndTextCommandSetBlipName(blips[source])
 			SetBlipColour(blips[source], color)
 		end
@@ -111,32 +138,37 @@ AddEventHandler('zeon_refuerzos:setRef', function(source, pos, color, heading, a
 end)
 
 
-RegisterKeyMapping('refuerzosMenu', 'Abrir menú refuerzos', 'keyboard', 'F6')
+RegisterKeyMapping('refuerzosMenu', 'Abrir menú refuerzos', 'keyboard', 'F7')
 
 RegisterCommand('refuerzosMenu', function()
-    ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_reference_menu_2', {
-        title    = "Acciones refuerzo",
-        align    = 'bottom-right',
-        elements = 
-        {
-            {label = "Refuerzos", value = "ref"},
-            {label = "Asignaciones", value = "asig"},
-            {label = "Codigos Radiales", value = "cmenu"}
-        }
-    }, function(data, menu)
-        local v = data.current.value
-        ESX.UI.Menu.CloseAll()
-        if v == "ref" then
-            ReferenceMenu()
-        elseif v == "asig" then
-            OpenAsignMenu()
-        elseif v == "cmenu" then
-            OpenCMenu()
-        end
-
-    end, function(data, menu)
-        menu.close()
-    end)
+    local xPlayer = ESX.GetPlayerData()
+    if xPlayer.job.name == 'police' then
+        ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_reference_menu_2', {
+            title    = "Acciones refuerzo",
+            align    = 'bottom-right',
+            elements = 
+            {
+                {label = "Refuerzos", value = "ref"},
+                {label = "Asignaciones", value = "asig"},
+                {label = "Codigos Radiales", value = "cmenu"}
+            }
+        }, function(data, menu)
+            local v = data.current.value
+            ESX.UI.Menu.CloseAll()
+            if v == "ref" then
+                ReferenceMenu()
+            elseif v == "asig" then
+                OpenAsignMenu()
+            elseif v == "cmenu" then
+                OpenCMenu()
+            end
+    
+        end, function(data, menu)
+            menu.close()
+        end)
+    else
+        TriggerEvent('zeon_notify:ShowNotification', "No eres policia", "Aviso")
+    end
 end)
 
 ----
@@ -204,7 +236,5 @@ local elementos = {}
         end
     )
 end
-
-RegisterKeyMapping('cmenu', 'Abrir menú central de radio', 'keyboard', 'F6')
 
 ---Copyright 2022 |-| ZeonFlux#4424 ----

@@ -51,3 +51,7 @@ end
   ['rpol_prefix'] = '^5[^*^0SAPD^*^r^5] %s %s ^5',
 
 ```
+
+## EXTRA
+
+- server/main.lua linea 44 (Pueden cambiar el tiempo que toma a el blip actualizarse, Afecta el resmon !)

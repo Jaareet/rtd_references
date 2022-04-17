@@ -5,6 +5,7 @@ author 'RTDTonino#2060'
 
 shared_script {
     '@es_extended/imports.lua',
+    'shared/function.lua',
   }
 
 client_script 'client/main.lua'

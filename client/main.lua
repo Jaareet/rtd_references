@@ -1,7 +1,7 @@
-local CurrentAsignation = "Sin Asignación"
+local CA = "Sin Asignación"
 
 
-function OpenAsignMenu()
+function OAM()
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'asignacion', {
 		title    = "Asignaciones",
@@ -47,9 +47,9 @@ function OpenAsignMenu()
     }}, function(data, menu)
 		local v = data.current.value
 		if v then
-			CurrentAsignation = data.current.label
-			Citizen.Wait(100)
-            ESX.ShowNotification('Te has asignado en '..data.current.label)
+			CA = data.current.label
+			W(100)
+            SN('Te has asignado en '..data.current.label)
 			ESX.UI.Menu.CloseAll()
 		end
 	end, function(data, menu)
@@ -59,7 +59,7 @@ end
 
 
 
-function ReferenceMenu()
+function RM()
     local elements = {}
     local t = table.insert
 
@@ -81,14 +81,14 @@ function ReferenceMenu()
         local v = data.current.value
         
         if v == 1 then
-			TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
+			SE('rtd_refuerzos:setRef', v, CA)
 			ESX.UI.Menu.CloseAll()
 		else
-            if CurrentAsignation ~= "Sin Asignación" then
-                TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
+            if CA ~= "Sin Asignación" then
+                SE('rtd_refuerzos:setRef', v, CA)
                 ESX.UI.Menu.CloseAll()
             else
-                ESX.ShowNotification('Tienes que asignarte antes de pedir refuerzos')
+                SN('Tienes que asignarte antes de pedir refuerzos')
             end
         end
 
@@ -99,17 +99,17 @@ end
 
 local blips = {}
 
-RegisterNetEvent('rtd_refuerzos:deleteRef')
-AddEventHandler('rtd_refuerzos:deleteRef', function(source, asign, name)
+RNE('rtd_refuerzos:deleteRef')
+ADH('rtd_refuerzos:deleteRef', function(source, asign, name)
     if(blips[source] and DoesBlipExist(blips[source])) then
         RemoveBlip(blips[source])
         blips[source] = nil
-        ESX.ShowNotification(asign.. ' | '..name.." ha desactivado su localizador")
+        SN(asign.. ' | '..name.." ha desactivado su localizador")
     end
 end)
 
-RegisterNetEvent('rtd_refuerzos:setRef')
-AddEventHandler('rtd_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
+RNE('rtd_refuerzos:setRef')
+ADH('rtd_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
 	local xPlayer = ESX.GetPlayerData()
 	if xPlayer.job.name == 'police' then
 		if blips[source] then
@@ -118,7 +118,7 @@ AddEventHandler('rtd_refuerzos:setRef', function(source, pos, color, heading, as
 			SetBlipRotation(blips[source], math.floor(heading))
 		else 
 			blips[source] = AddBlipForCoord(pos.x, pos.y, pos.z)
-            ESX.ShowNotification(asign.. ' | '..name.." ha activado su localizador")
+            SN(asign.. ' | '..name.." ha activado su localizador")
 			BeginTextCommandSetBlipName('STRING')
 			AddTextComponentSubstringPlayerName(asign..' | '..name)
 			EndTextCommandSetBlipName(blips[source])
@@ -152,22 +152,22 @@ RegisterCommand('refuerzosMenu', function()
 
 
             if v == "ref" then
-                ReferenceMenu()
+                RM()
             elseif v == "asig" then
-                OpenAsignMenu()
+                OAM()
             elseif v == "cmenu" then
-                OpenCMenu()
+                OCM()
             end
     
         end, function(data, menu)
             menu.close()
         end)
     else
-        ESX.ShowNotification("No eres policia")
+        SN("No eres policia")
     end
 end)
 
-function OpenCMenu ()
+function OCM ()
     
 local elements = {}
 local t = table.insert
@@ -188,9 +188,9 @@ local t = table.insert
             local v = data.current.value
 
             if v == '10.08' then
-                ExecuteCommand('rpol [LSPD] - 10.8')
+                EXC('rpol [LSPD] - 10.8')
             elseif v == 'cod2' then
-                ExecuteCommand('rpol [LSPD] - ['..CurrentAsignation..'] | Inicia su Cod.2')
+                EXC('rpol [LSPD] - ['..CA..'] | Inicia su Cod.2')
             elseif v =='10.06' then
                 local ply = PlayerPedId()
                 local plyl = GetStreetNameFromHashKey(GetStreetNameAtCoord(table.unpack(GetEntityCoords(ply, true))))
@@ -203,9 +203,9 @@ local t = table.insert
     
                 local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                 local fplate = GetVehicleNumberPlateText(e)
-                TriggerServerEvent('rtd_refuerzos:setRef', 52, CurrentAsignation)
+                SE('rtd_refuerzos:setRef', 52, CA)
 
-                ExecuteCommand('rpol [LSPD] - [' ..CurrentAsignation.. "] | 10.6 | " ..fmodel.. " con matrícula "..fplate.." en "..plyl)
+                EXC('rpol [LSPD] - [' ..CA.. "] | 10.6 | " ..fmodel.. " con matrícula "..fplate.." en "..plyl)
             elseif v == '254v' then
                     local ply = PlayerPedId()
                     local plyl = GetStreetNameFromHashKey(GetStreetNameAtCoord(table.unpack(GetEntityCoords(ply, true))))
@@ -218,11 +218,11 @@ local t = table.insert
     
                     local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                     local fplate = GetVehicleNumberPlateText(e)
-                    TriggerServerEvent('rtd_refuerzos:setRef', 11, CurrentAsignation)
+                    SE('rtd_refuerzos:setRef', 11, CA)
 
-                    ExecuteCommand('rpol [LSPD] - ['..CurrentAsignation.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
+                    EXC('rpol [LSPD] - ['..CA.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
             elseif v == '10.10' then
-                ExecuteCommand('rpol Realiza su 10.10')
+                EXC('rpol Realiza su 10.10')
             else
             end
         end, function(data, menu)

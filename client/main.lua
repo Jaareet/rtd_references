@@ -7,7 +7,6 @@ function OpenAsignMenu()
 		title    = "Asignaciones",
 		align    = 'bottom-right',
 		elements = {
-
 			{label = "Mando LSPD", value = 'mandolspd'},
 			{label = "Mando BCSD",   value = 'mandobcsd'},
 			{label = "U-10", value = 'u10'},
@@ -50,7 +49,7 @@ function OpenAsignMenu()
 		if v then
 			CurrentAsignation = data.current.label
 			Citizen.Wait(100)
-            TriggerEvent('zeon_notify:ShowNotification', 'Te has asignado en '..data.current.label, "Policia")
+            ESX.ShowNotification('Te has asignado en '..data.current.label)
 			ESX.UI.Menu.CloseAll()
 		end
 	end, function(data, menu)
@@ -62,16 +61,17 @@ end
 
 function ReferenceMenu()
     local elements = {}
+    local t = table.insert
 
-    table.insert(elements, {label = '🟢 Referencia 254', value = 11})
-    table.insert(elements, {label = '🟢 Referencia 10.6', value = 52})
-    table.insert(elements, {label = '🔵 Referencia 488', value = 3})
-    table.insert(elements, {label = '🟡 Referencia 487', value = 33})
-    table.insert(elements, {label = '🟣 [LSPD] 6 ADAM', value = 27})
-    table.insert(elements, {label = '🟡 [BCSD] 6 ADAM', value = 47})
-    table.insert(elements, {label = '🔴 Referencia QRR', value = 1})
-    table.insert(elements, {label = '⚪ Referencia', value = 0})
-    table.insert(elements, {label = 'Desactivar Referencias', value = 'nref'})
+    t(elements, {label = '🟢 Referencia 254', value = 11})
+    t(elements, {label = '🟢 Referencia 10.6', value = 52})
+    t(elements, {label = '🔵 Referencia 488', value = 3})
+    t(elements, {label = '🟡 Referencia 487', value = 33})
+    t(elements, {label = '🟣 [LSPD] 6 ADAM', value = 27})
+    t(elements, {label = '🟡 [BCSD] 6 ADAM', value = 47})
+    t(elements, {label = '🔴 Referencia QRR', value = 1})
+    t(elements, {label = '⚪ Referencia', value = 0})
+    t(elements, {label = 'Desactivar Referencias', value = 'nref'})
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_reference_menu', {
         title    = "Referencias",
@@ -81,14 +81,14 @@ function ReferenceMenu()
         local v = data.current.value
         
         if v == 1 then
-			TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
+			TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
 			ESX.UI.Menu.CloseAll()
 		else
             if CurrentAsignation ~= "Sin Asignación" then
-                TriggerServerEvent('zeon_refuerzos:setRef', v, CurrentAsignation)
+                TriggerServerEvent('rtd_refuerzos:setRef', v, CurrentAsignation)
                 ESX.UI.Menu.CloseAll()
             else
-                TriggerEvent('zeon_notify:ShowNotification', 'Tienes que asignarte antes de pedir refuerzos', "Policia")
+                ESX.ShowNotification('Tienes que asignarte antes de pedir refuerzos')
             end
         end
 
@@ -99,26 +99,26 @@ end
 
 local blips = {}
 
-RegisterNetEvent('zeon_refuerzos:deleteRef')
-AddEventHandler('zeon_refuerzos:deleteRef', function(source, asign, name)
+RegisterNetEvent('rtd_refuerzos:deleteRef')
+AddEventHandler('rtd_refuerzos:deleteRef', function(source, asign, name)
     if(blips[source] and DoesBlipExist(blips[source])) then
         RemoveBlip(blips[source])
         blips[source] = nil
-        TriggerEvent('zeon_notify:ShowNotification', asign.. ' | '..name.." ha desactivado su localizador", "Policia")
+        ESX.ShowNotification(asign.. ' | '..name.." ha desactivado su localizador")
     end
 end)
 
-RegisterNetEvent('zeon_refuerzos:setRef')
-AddEventHandler('zeon_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
+RegisterNetEvent('rtd_refuerzos:setRef')
+AddEventHandler('rtd_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
 	local xPlayer = ESX.GetPlayerData()
 	if xPlayer.job.name == 'police' then
-		if blips[source] then --actualiza blip
+		if blips[source] then
 			SetBlipCoords(blips[source], pos.x,pos.y,pos.z)
 			ShowHeadingIndicatorOnBlip(blips[source], true)
 			SetBlipRotation(blips[source], math.floor(heading))
-		else --crea blip, es nuevo
+		else 
 			blips[source] = AddBlipForCoord(pos.x, pos.y, pos.z)
-            TriggerEvent('zeon_notify:ShowNotification', asign.. ' | '..name.." ha activado su localizador", "Policia")
+            ESX.ShowNotification(asign.. ' | '..name.." ha activado su localizador")
 			BeginTextCommandSetBlipName('STRING')
 			AddTextComponentSubstringPlayerName(asign..' | '..name)
 			EndTextCommandSetBlipName(blips[source])
@@ -135,10 +135,11 @@ RegisterCommand('refuerzosMenu', function()
     if xPlayer.job.name == 'police' then
 
     local elements = {}
+    local t = table.insert
 
-        table.insert(elements, {label = 'Refuerzos', value = 'ref'})
-        table.insert(elements, {label = 'Asignaciones', value = 'asig'})
-        table.insert(elements, {label = 'Codigos Radiales', value = 'cmenu'})
+        t(elements, {label = 'Refuerzos', value = 'ref'})
+        t(elements, {label = 'Asignaciones', value = 'asig'})
+        t(elements, {label = 'Codigos Radiales', value = 'cmenu'})
         
         ESX.UI.Menu.CloseAll()
         
@@ -162,18 +163,19 @@ RegisterCommand('refuerzosMenu', function()
             menu.close()
         end)
     else
-        TriggerEvent('zeon_notify:ShowNotification', "No eres policia", "Aviso")
+        ESX.ShowNotification("No eres policia")
     end
 end)
 
 function OpenCMenu ()
     
 local elements = {}
+local t = table.insert
 
-    table.insert(elements, {label = 'Esperando Asignacion', value = '10.08'})
-    table.insert(elements, {label = 'Iniciar 10.06', value = '10.06'})
-    table.insert(elements, {label = 'Iniciar 254-V', value = '254v'})
-    table.insert(elements, {label = 'Realizar 10.10', value = '10.10'})
+    t(elements, {label = 'Esperando Asignacion', value = '10.08'})
+    t(elements, {label = 'Iniciar 10.06', value = '10.06'})
+    t(elements, {label = 'Iniciar 254-V', value = '254v'})
+    t(elements, {label = 'Realizar 10.10', value = '10.10'})
   
     ESX.UI.Menu.CloseAll()
   
@@ -201,7 +203,7 @@ local elements = {}
     
                 local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                 local fplate = GetVehicleNumberPlateText(e)
-                TriggerServerEvent('zeon_refuerzos:setRef', 52, CurrentAsignation)
+                TriggerServerEvent('rtd_refuerzos:setRef', 52, CurrentAsignation)
 
                 ExecuteCommand('rpol [LSPD] - [' ..CurrentAsignation.. "] | 10.6 | " ..fmodel.. " con matrícula "..fplate.." en "..plyl)
             elseif v == '254v' then
@@ -216,7 +218,7 @@ local elements = {}
     
                     local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                     local fplate = GetVehicleNumberPlateText(e)
-                    TriggerServerEvent('zeon_refuerzos:setRef', 11, CurrentAsignation)
+                    TriggerServerEvent('rtd_refuerzos:setRef', 11, CurrentAsignation)
 
                     ExecuteCommand('rpol [LSPD] - ['..CurrentAsignation.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
             elseif v == '10.10' then

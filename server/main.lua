@@ -5,7 +5,7 @@ function DeleteBlip(source, CurrentAsign)
     local Player = ESX.GetPlayerFromId(source)
     local name = Player.getName()
     for k,v in pairs(polices) do
-        TriggerClientEvent('zeon_refuerzos:deleteRef', k, source, CurrentAsign, name)
+        TriggerClientEvent('rtd_refuerzos:deleteRef', k, source, CurrentAsign, name)
     end
     referencias[source] = nil
 end
@@ -17,19 +17,19 @@ function CreateBlip(source, color, CurrentAsign)
     local pos = GetEntityCoords(playerPed)
     local heading = GetEntityHeading(playerPed)
     for k,v in pairs(polices) do
-        TriggerClientEvent('zeon_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
+        TriggerClientEvent('rtd_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
     end
     referencias[source] = true
 end
 
-RegisterServerEvent('zeon_refuerzos:setRef')
-AddEventHandler('zeon_refuerzos:setRef', function(type, CurrentAsign)
+RegisterServerEvent('rtd_refuerzos:setRef')
+AddEventHandler('rtd_refuerzos:setRef', function(type, CurrentAsign)
     local source = source
 
     if(not polices[source]) then return end 
     
     if referencias[source] then 
-        TriggerEvent('zeon_notify:ShowNotification', "Has desactivado los ~o~ refuerzos", "Policia")
+        xPlayer.showNotification("Has desactivado los ~o~ refuerzos")
         DeleteBlip(source, CurrentAsign)
     end
 
@@ -41,15 +41,16 @@ end)
 
 Citizen.CreateThread(function()
     while true do
+        local mrs = 1200
         for k,v in pairs(referencias) do
             local policePed = GetPlayerPed(k)
             local policeCoords = GetEntityCoords(policePed)
             local policeHeading = GetEntityHeading(policePed)        
             for _,val in pairs(polices) do
-                TriggerClientEvent('zeon_refuerzos:setRef', _, k, policeCoords, 3, policeHeading, "", "")
+                TriggerClientEvent('rtd_refuerzos:setRef', _, k, policeCoords, 3, policeHeading, "", "")
             end
         end
-        Citizen.Wait(0)
+        Citizen.Wait(mrs)
     end
 end)
 

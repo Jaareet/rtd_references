@@ -1,4 +1,4 @@
-# zeon_refuerzos
+# rtd_refuerzos
 
 - add this to your `esx_rpchat` `server-side`
 

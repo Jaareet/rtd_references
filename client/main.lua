@@ -1,14 +1,4 @@
----Copyright 2021 |-| ZeonFlux#4424 ----
-local ESX = nil
-
-Citizen.CreateThread(function()
-    while ESX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-        Citizen.Wait(10)
-    end
-end)
-
-local CurrentAsignation = "Sin Asignación" --key of below array. No tocar
+local CurrentAsignation = "Sin Asignación"
 
 
 function OpenAsignMenu()
@@ -71,22 +61,22 @@ end
 
 
 function ReferenceMenu()
-    local elementos = {}
+    local elements = {}
 
-    table.insert(elementos, {label = '🟢 Referencia 254', value = 11})
-    table.insert(elementos, {label = '🟢 Referencia 10.6', value = 52})
-    table.insert(elementos, {label = '🔵 Referencia 488', value = 3})
-    table.insert(elementos, {label = '🟡 Referencia 487', value = 33})
-    table.insert(elementos, {label = '🟣 [LSPD] 6 ADAM', value = 27})
-    table.insert(elementos, {label = '🟡 [BCSD] 6 ADAM', value = 47})
-    table.insert(elementos, {label = '🔴 Referencia QRR', value = 1})
-    table.insert(elementos, {label = '⚪ Referencia', value = 0})
-    table.insert(elementos, {label = 'Desactivar Referencias', value = 'nref'})
+    table.insert(elements, {label = '🟢 Referencia 254', value = 11})
+    table.insert(elements, {label = '🟢 Referencia 10.6', value = 52})
+    table.insert(elements, {label = '🔵 Referencia 488', value = 3})
+    table.insert(elements, {label = '🟡 Referencia 487', value = 33})
+    table.insert(elements, {label = '🟣 [LSPD] 6 ADAM', value = 27})
+    table.insert(elements, {label = '🟡 [BCSD] 6 ADAM', value = 47})
+    table.insert(elements, {label = '🔴 Referencia QRR', value = 1})
+    table.insert(elements, {label = '⚪ Referencia', value = 0})
+    table.insert(elements, {label = 'Desactivar Referencias', value = 'nref'})
 
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_reference_menu', {
         title    = "Referencias",
         align    = 'right',
-        elements = elementos
+        elements = elements
     }, function(data, menu)
         local v = data.current.value
         
@@ -143,18 +133,23 @@ RegisterKeyMapping('refuerzosMenu', 'Abrir menú refuerzos', 'keyboard', 'F7')
 RegisterCommand('refuerzosMenu', function()
     local xPlayer = ESX.GetPlayerData()
     if xPlayer.job.name == 'police' then
+
+    local elements = {}
+
+        table.insert(elements, {label = 'Refuerzos', value = 'ref'})
+        table.insert(elements, {label = 'Asignaciones', value = 'asig'})
+        table.insert(elements, {label = 'Codigos Radiales', value = 'cmenu'})
+        
+        ESX.UI.Menu.CloseAll()
+        
         ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'police_reference_menu_2', {
             title    = "Acciones refuerzo",
             align    = 'bottom-right',
-            elements = 
-            {
-                {label = "Refuerzos", value = "ref"},
-                {label = "Asignaciones", value = "asig"},
-                {label = "Codigos Radiales", value = "cmenu"}
-            }
+            elements = elements
         }, function(data, menu)
             local v = data.current.value
-            ESX.UI.Menu.CloseAll()
+
+
             if v == "ref" then
                 ReferenceMenu()
             elseif v == "asig" then
@@ -171,28 +166,23 @@ RegisterCommand('refuerzosMenu', function()
     end
 end)
 
-----
-
----Copyright 2022 |-| RTDTonino#2060 ----
-
 function OpenCMenu ()
     
-local elementos = {}
+local elements = {}
 
-    table.insert(elementos, {label = 'Esperando Asignacion', value = '10.08'})
-    table.insert(elementos, {label = 'Iniciar 10.06', value = '10.06'})
-    table.insert(elementos, {label = 'Iniciar 254-V', value = '254v'})
+    table.insert(elements, {label = 'Esperando Asignacion', value = '10.08'})
+    table.insert(elements, {label = 'Iniciar 10.06', value = '10.06'})
+    table.insert(elements, {label = 'Iniciar 254-V', value = '254v'})
+    table.insert(elements, {label = 'Realizar 10.10', value = '10.10'})
   
     ESX.UI.Menu.CloseAll()
   
     ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'cmenu', {
             title    = 'Codigos Radiales',
             align    = 'bottom-right',
-            elements = elementos
+            elements = elements
         }, function(data, menu)
   
-            local name = ESX.TriggerServerCallback("test", function(data) return data end)
-            local name = ESX.TriggerServerCallback("job", function(jobs) return jobs end)
             local v = data.current.value
 
             if v == '10.08' then
@@ -229,6 +219,8 @@ local elementos = {}
                     TriggerServerEvent('zeon_refuerzos:setRef', 11, CurrentAsignation)
 
                     ExecuteCommand('rpol [LSPD] - ['..CurrentAsignation.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
+            elseif v == '10.10' then
+                ExecuteCommand('rpol Realiza su 10.10')
             else
             end
         end, function(data, menu)
@@ -236,5 +228,3 @@ local elementos = {}
         end
     )
 end
-
----Copyright 2022 |-| ZeonFlux#4424 ----

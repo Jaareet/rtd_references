@@ -1,8 +1,3 @@
----Copyright 2021 |-| ZeonFlux#4424 ----
-ESX = nil
-
-TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-
 local polices = {}
 local referencias = {}
 
@@ -31,14 +26,14 @@ RegisterServerEvent('zeon_refuerzos:setRef')
 AddEventHandler('zeon_refuerzos:setRef', function(type, CurrentAsign)
     local source = source
 
-    if(not polices[source]) then return end --no es policia. Quizás inyectó código
+    if(not polices[source]) then return end 
     
-    if referencias[source] then --antes de crear otro blip, borro el existente
+    if referencias[source] then 
         TriggerEvent('zeon_notify:ShowNotification', "Has desactivado los ~o~ refuerzos", "Policia")
         DeleteBlip(source, CurrentAsign)
     end
 
-    if type ~= 'nref' then --si he pulsado sobre otros -> activo también los nuevos
+    if type ~= 'nref' then
         CreateBlip(source, type, CurrentAsign)
     end
 

@@ -81,11 +81,11 @@ function RM()
         local v = data.current.value
         
         if v == 1 then
-			SE('rtd_refuerzos:setRef', v, CA)
+			SE('rtd_references:setRef', v, CA)
 			ESX.UI.Menu.CloseAll()
 		else
             if CA ~= "Sin Asignación" then
-                SE('rtd_refuerzos:setRef', v, CA)
+                SE('rtd_references:setRef', v, CA)
                 ESX.UI.Menu.CloseAll()
             else
                 SN('Tienes que asignarte antes de pedir refuerzos')
@@ -99,8 +99,8 @@ end
 
 local blips = {}
 
-RNE('rtd_refuerzos:deleteRef')
-ADH('rtd_refuerzos:deleteRef', function(source, asign, name)
+RNE('rtd_references:deleteRef')
+ADH('rtd_references:deleteRef', function(source, asign, name)
     if(blips[source] and DoesBlipExist(blips[source])) then
         RemoveBlip(blips[source])
         blips[source] = nil
@@ -108,8 +108,8 @@ ADH('rtd_refuerzos:deleteRef', function(source, asign, name)
     end
 end)
 
-RNE('rtd_refuerzos:setRef')
-ADH('rtd_refuerzos:setRef', function(source, pos, color, heading, asign, name)	
+RNE('rtd_references:setRef')
+ADH('rtd_references:setRef', function(source, pos, color, heading, asign, name)	
 	local xPlayer = ESX.GetPlayerData()
 	if xPlayer.job.name == 'police' then
 		if blips[source] then
@@ -203,7 +203,7 @@ local t = table.insert
     
                 local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                 local fplate = GetVehicleNumberPlateText(e)
-                SE('rtd_refuerzos:setRef', 52, CA)
+                SE('rtd_references:setRef', 52, CA)
 
                 EXC('rpol [LSPD] - [' ..CA.. "] | 10.6 | " ..fmodel.. " con matrícula "..fplate.." en "..plyl)
             elseif v == '254v' then
@@ -218,7 +218,7 @@ local t = table.insert
     
                     local fmodel = GetDisplayNameFromVehicleModel(GetEntityModel(e))
                     local fplate = GetVehicleNumberPlateText(e)
-                    SE('rtd_refuerzos:setRef', 11, CA)
+                    SE('rtd_references:setRef', 11, CA)
 
                     EXC('rpol [LSPD] - ['..CA.. "] inicia un 254-V a un "..fmodel.. " con matrícula "..fplate.. " por la zona de "..plyl..". Activamos referencias.")
             elseif v == '10.10' then

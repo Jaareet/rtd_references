@@ -101,10 +101,13 @@ local blips = {}
 
 RNE('rtd_references:deleteRef')
 ADH('rtd_references:deleteRef', function(source, asign, name)
-    if(blips[source] and DoesBlipExist(blips[source])) then
-        RemoveBlip(blips[source])
-        blips[source] = nil
-        SN(asign.. ' | '..name.." ha desactivado su localizador")
+    player = ESX.GetPlayerData()
+    if player.job.name == 'police' then
+        if(blips[source] and DoesBlipExist(blips[source])) then
+            RemoveBlip(blips[source])
+            blips[source] = nil
+            SN(asign.. ' | '..name.." ha desactivado su localizador")
+        end
     end
 end)
 

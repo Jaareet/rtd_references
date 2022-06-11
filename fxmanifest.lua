@@ -3,14 +3,8 @@ games {'gta5'}
 
 author 'RTDTonino#2060'
 
-shared_script {
-    '@es_extended/imports.lua',
-    'shared/shared.lua',
-  }
+shared_script {'shared/shared.lua'}
 
-client_script {
-  'client/main.lua',
-}
-server_script {
-  'server/main.lua',
-}
+client_script {'client/*.lua'}
+
+server_script {'server/*.lua'}

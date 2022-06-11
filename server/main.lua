@@ -1,5 +1,3 @@
-ESX = exports['es_extended']:getSharedObject()
-
 local polices = {}
 local referencias = {}
 
@@ -7,7 +5,7 @@ function DeleteBlip(source, CurrentAsign)
     local Player = ESX.GetPlayerFromId(source)
     local name = Player.getName()
     for k,v in pairs(polices) do
-        TCE('rtd_refuerzos:deleteRef', k, source, CurrentAsign, name)
+        TCE('rtd_references:deleteRef', k, source, CurrentAsign, name)
     end
     referencias[source] = nil
 end
@@ -19,13 +17,13 @@ function CreateBlip(source, color, CurrentAsign)
     local pos = GetEntityCoords(playerPed)
     local heading = GetEntityHeading(playerPed)
     for k,v in pairs(polices) do
-        TCE('rtd_refuerzos:setRef', k, source, pos, color, heading, CurrentAsign, name)
+        TCE('rtd_references:setRef', k, source, pos, color, heading, CurrentAsign, name)
     end
     referencias[source] = true
 end
 
-RSE('rtd_refuerzos:setRef')
-ADH('rtd_refuerzos:setRef', function(type, CurrentAsign)
+RSE('rtd_references:setRef')
+ADH('rtd_references:setRef', function(type, CurrentAsign)
     local source = source
 
     if(not polices[source]) then return end 
@@ -49,7 +47,7 @@ CT(function()
             local policeCoords = GetEntityCoords(policePed)
             local policeHeading = GetEntityHeading(policePed)        
             for _,val in pairs(polices) do
-                TCE('rtd_refuerzos:setRef', _, k, policeCoords, 3, policeHeading, "", "")
+                TCE('rtd_references:setRef', _, k, policeCoords, 3, policeHeading, "", "")
             end
         end
         W(mrs)

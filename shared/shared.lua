@@ -1,3 +1,5 @@
+ESX = exports['es_extended']:getSharedObject()
+
 SE = function(e, ...) TriggerServerEvent(e, ...) end
 
 TCE = function(e, ...) TriggerClientEvent(e, ...) end
